@@ -1,5 +1,7 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.net.URISyntaxException;
 
 import static com.raylib.Jaylib.LIGHTGRAY;
 import static com.raylib.Jaylib.BLACK;
@@ -8,7 +10,7 @@ import static com.raylib.Jaylib.WHITE;
 import static com.raylib.Jaylib.RED;
 import static com.raylib.Raylib.*;
 public class Main {
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws URISyntaxException {
         Main main = new Main();
         int screenWidth = 500;
         int screenHeight = 500;
@@ -74,20 +76,20 @@ public class Main {
 
             if(!startMenu && !lost) {
                 //Movement
-                if (IsKeyDown(KEY_W)) {
+                if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
                     playerPos.y(playerPos.y() - speed);
                 }
-                if (IsKeyDown(KEY_D)) {
+                if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
                     playerPos.x(playerPos.x() + speed);
                 }
-                if (IsKeyDown(KEY_S)) {
+                if (IsKeyDown(KEY_S)  || IsKeyDown(KEY_DOWN)) {
                     playerPos.y(playerPos.y() + speed);
                 }
-                if (IsKeyDown(KEY_A)) {
+                if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
                     playerPos.x(playerPos.x() - speed);
                 }
 
-                if(IsKeyDown(KEY_A) || IsKeyDown(KEY_W) || IsKeyDown(KEY_D) || IsKeyDown(KEY_S) )walking = true;
+                if(IsKeyDown(KEY_A) || IsKeyDown(KEY_W) || IsKeyDown(KEY_D) || IsKeyDown(KEY_S) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_DOWN) )walking = true;
                 else walking = false;
 
                 player.SetPosition(playerPos);
@@ -244,8 +246,11 @@ public class Main {
 
     }
 
-    public String getPath (String fileName) {
-        return this.getClass().getResource(fileName).getPath().substring(1);
+    public String getPath(String fileName) throws URISyntaxException {
+        File f = new File(this.getClass().getProtectionDomain().
+                getCodeSource().getLocation().toURI().getPath());
+
+        return f.getParent() + "\\assets\\"+fileName;
     }
 
 }
