@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.net.URISyntaxException;
 
 import static com.raylib.Jaylib.LIGHTGRAY;
@@ -10,7 +8,7 @@ import static com.raylib.Jaylib.WHITE;
 import static com.raylib.Jaylib.RED;
 import static com.raylib.Raylib.*;
 public class Main {
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException, IOException {
         Main main = new Main();
         int screenWidth = 500;
         int screenHeight = 500;
@@ -30,12 +28,13 @@ public class Main {
         float timer = 0;
         float stoneTimer = 0;
         float timeSurvived = 0;
-        float highscore = 0;
+        float highscore = Integer.valueOf(GetValue(main.getPath("highscore.txt")));
         float menuCircle = 15;
 
         boolean walking = false;
         boolean lost = false;
         boolean startMenu = true;
+
 
         Player player = new Player(playerPos);
 
@@ -53,7 +52,7 @@ public class Main {
         Texture banner = LoadTexture(main.getPath("banner.png"));
 
         player.ApplyHitBox(playeranim);
-        BeginDrawing();
+
 
 
 
@@ -108,6 +107,7 @@ public class Main {
                     lost = true;
                     voidRadius = 10;
                     highscore = timeSurvived;
+                    WriteValue(main.getPath("highscore.txt"),String.valueOf(highscore).substring(0,String.valueOf(highscore).indexOf(".")));
                     timeSurvived = 0;
                     stoneNumber = 0;
                     voidTime = 5;
@@ -153,13 +153,13 @@ public class Main {
                     if (voidTime > 0.2) voidTime -= 0.5;
                 }
 
-                System.out.println(voidTime);
+
 
                 if (player.holdStone && voidRadius > 5) {
                     if (CheckCollisionCircleRec(new Vector2().x(screenWidth / 2).y(screenHeight / 2), voidRadius + 40, player.hitBox)) {
                         voidRadius -= 5;
                         player.holdStone = false;
-                        voidTime += 0.4f;
+                        voidTime += 0.45f;
 
                     }
                 }
@@ -235,6 +235,7 @@ public class Main {
                 /*DrawText("Time survived: "+String.valueOf(highscore).substring(0,String.valueOf(highscore).indexOf("."))
                         ,40,218,30,BLACK);*/
                 DrawText("A PFLA game", 40, 220, 25, BLACK);
+                DrawText("Highscore: "+String.valueOf(highscore).substring(0,String.valueOf(highscore).indexOf(".")),40,240,30,BLACK);
                 DrawText("press Enter to start",50,400,30,BLACK);
 
             }
@@ -252,5 +253,20 @@ public class Main {
 
         return f.getParent() + "\\assets\\"+fileName;
     }
+
+    public static String GetValue (String fileName) throws IOException {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br = new BufferedReader(fr);
+        return br.readLine();
+
+
+    }
+
+   public static void WriteValue (String fileName, String value) throws IOException {
+        FileWriter fw = new FileWriter(fileName);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(value);
+        bw.close();
+   }
 
 }
