@@ -26,7 +26,7 @@ public class Stone {
     }
 
     public void applyHitBoxStone (Animations anim) {
-        this.hitBox = new Rectangle().x(this.position.x()).y(this.position.y()).height(anim.image.height()).width(anim.image.width());
+        this.hitBox = new Rectangle().x(this.position.x()).y(this.position.y()).height(anim.texture.height()).width(anim.texture.width());
 
     }
 
